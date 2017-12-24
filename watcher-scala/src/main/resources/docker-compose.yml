@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+  seed1-app:
+    image: johnwang412/watcher-scala:latest
+    hostname: watcher-seed1
+    environment:
+      NETTY_TCP_HOST: watcher-seed1
+      NETTY_TCP_PORT: 2552
+      SEED_SYSTEM_NAME: WatcherSystem
+      SEED1_HOST:  watcher-seed1
+      SEED1_SYSTEM_PORT: 2552
+      SEED2_HOST: watcher-seed2
+      SEED2_SYSTEM_PORT: 2553
+    networks:
+      watcher-nw
+    deploy:
+      replicas: 1
+      restart_policy:
+        conditions: any
+        delay: 20s
+      update_config:
+        parallelism: 1
+        delay: 10s
+  seed1-app:
+    image: johnwang412/watcher-scala:latest
+    hostname: watcher-seed2
+    environment:
+      NETTY_TCP_HOST: watcher-seed2
+      NETTY_TCP_PORT: 2553
+      SEED_SYSTEM_NAME: WatcherSystem
+      SEED1_HOST:  watcher-seed1
+      SEED1_SYSTEM_PORT: 2552
+      SEED2_HOST: watcher-seed2
+      SEED2_SYSTEM_PORT: 2553
+    networks:
+      watcher-nw
+    deploy:
+      replicas: 1
+      restart_policy:
+        conditions: any
+        delay: 20s
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+networks:
+  playlist-nw:
+    driver: overlay
