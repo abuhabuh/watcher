@@ -1,5 +1,16 @@
 # Overview
 
+## TODO: think about how to monitor an infinite # of services
+
+* Test if python schedule library can fall behind
+
+* Feedback to autoscaling service that monitoring is behind
+  * cluster service then needs to scale up
+  * on scale up, cluster needs to redistribute load
+    * <OR> cluster only monitors the jobs it can fit, then schedules rest of jobs when there is spare capacity
+
+* worker <-> admin communication needs to be encrypted
+
 ## Architecture
 
 Single monitor manager instance
@@ -15,6 +26,18 @@ Multiple monitor threads
   * Parse response json according to json parser
     * Need a json string reader parser
   * Records metric (json format) per successful ping
+
+### Worker and Admin model
+
+#### watcher-worker
+
+* Monitors it's own jobs to see if any running behind schedule
+  * If one job behind schedule, remove it, kick it to admin, admin puts it in waiting workers queue
+
+#### watcher-admin
+
+* If admin has waiting workers queue, fires 'scaling limit hit' alert
+
 
 ## Endpoint config files
 

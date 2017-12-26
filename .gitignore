@@ -1,6 +1,6 @@
 ### PYTHON
-
-
+watcher-python/dist/
+*.pyc
 
 ### SCALA
 # dirs

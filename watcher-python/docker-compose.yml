@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+  watcher-admin:
+    image: johnwang412/watcher-python:latest
+    hostname: watcher-admin
+    env-file:
+      - watcher-admin.env
+    networks:
+      # todo: should be configurable on the fly without restarting service
+      # - can we do that in docker? kube?
+      - watcher-nw
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 20s
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+networks:
+  watcher-nw:
+    driver: overlay
